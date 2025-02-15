@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/integrations/firebase/config';
+import { collection, getDocs, addDoc, orderBy, query } from 'firebase/firestore';
 import { useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,13 +33,16 @@ export default function Groups() {
 
   const fetchGroups = async () => {
     try {
-      const { data, error } = await supabase
-        .from('groups')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setGroups(data || []);
+      const groupsQuery = query(
+        collection(db, 'groups'),
+        orderBy('created_at', 'desc')
+      );
+      const snapshot = await getDocs(groupsQuery);
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Group[];
+      setGroups(data);
     } catch (error: any) {
       toast({
         title: "Error fetching groups",
@@ -57,32 +60,21 @@ export default function Groups() {
 
     setCreating(true);
     try {
-      const { data: groupData, error: groupError } = await supabase
-        .from('groups')
-        .insert([
-          {
-            name: newGroupName,
-            description: newGroupDescription,
-            created_by: user.id,
-          },
-        ])
-        .select()
-        .single();
+      const groupData = {
+        name: newGroupName,
+        description: newGroupDescription,
+        created_by: user.uid,
+        created_at: new Date().toISOString(),
+      };
 
-      if (groupError) throw groupError;
+      const docRef = await addDoc(collection(db, 'groups'), groupData);
 
       // Add creator as owner
-      const { error: memberError } = await supabase
-        .from('group_members')
-        .insert([
-          {
-            group_id: groupData.id,
-            user_id: user.id,
-            role: 'owner',
-          },
-        ]);
-
-      if (memberError) throw memberError;
+      await addDoc(collection(db, 'group_members'), {
+        group_id: docRef.id,
+        user_id: user.uid,
+        role: 'owner',
+      });
 
       toast({
         title: "Success",

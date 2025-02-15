@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/integrations/firebase/config';
+import { collection, query, where, getDocs, setDoc, doc } from 'firebase/firestore';
 import { useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,13 +35,16 @@ export default function Preferences() {
 
   const fetchPreferences = async () => {
     try {
-      const { data, error } = await supabase
-        .from('travel_preferences')
-        .select('*')
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-      setPreferences(data || []);
+      const prefsQuery = query(
+        collection(db, 'travel_preferences'),
+        where('user_id', '==', user?.uid)
+      );
+      const snapshot = await getDocs(prefsQuery);
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as TravelPreference[];
+      setPreferences(data);
     } catch (error: any) {
       toast({
         title: "Error fetching preferences",
@@ -57,20 +60,28 @@ export default function Preferences() {
     if (!user) return;
 
     try {
-      const { error } = await supabase
-        .from('travel_preferences')
-        .upsert(
-          {
-            user_id: user.id,
-            preference_type: type,
-            preference_value: value,
-          },
-          {
-            onConflict: 'user_id,preference_type',
-          }
-        );
+      const prefQuery = query(
+        collection(db, 'travel_preferences'),
+        where('user_id', '==', user.uid),
+        where('preference_type', '==', type)
+      );
+      const prefSnapshot = await getDocs(prefQuery);
+      
+      const prefData = {
+        user_id: user.uid,
+        preference_type: type,
+        preference_value: value,
+        updated_at: new Date().toISOString(),
+      };
 
-      if (error) throw error;
+      if (prefSnapshot.empty) {
+        await setDoc(doc(collection(db, 'travel_preferences')), {
+          ...prefData,
+          created_at: new Date().toISOString(),
+        });
+      } else {
+        await setDoc(doc(db, 'travel_preferences', prefSnapshot.docs[0].id), prefData);
+      }
 
       toast({
         title: "Success",

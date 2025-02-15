@@ -1,7 +1,7 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { auth } from '@/integrations/firebase/config';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
@@ -18,36 +18,20 @@ export default function Auth() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading) return; // Prevent multiple submissions
+    if (loading) return;
     setLoading(true);
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-        if (error) {
-          // Handle rate limit error specifically
-          if (error.status === 429) {
-            const message = JSON.parse(error.message).message || "Please wait before trying again.";
-            throw new Error(message);
-          }
-          throw error;
-        }
+        await createUserWithEmailAndPassword(auth, email, password);
         toast({
           title: "Success!",
-          description: "Please check your email to verify your account.",
+          description: "Account created successfully.",
         });
-        // Reset form after successful signup
         setEmail('');
         setPassword('');
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
+        await signInWithEmailAndPassword(auth, email, password);
         navigate('/');
       }
     } catch (error: any) {

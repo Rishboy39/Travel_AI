@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
-import { supabase } from "@/integrations/supabase/client";
+import { auth } from "@/integrations/firebase/config";
+import { signOut } from "firebase/auth";
 import { useToast } from "@/components/ui/use-toast";
 
 const Navigation = () => {
@@ -15,8 +15,7 @@ const Navigation = () => {
 
   const handleSignOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      await signOut(auth);
       navigate('/auth');
     } catch (error: any) {
       toast({

@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/integrations/firebase/config';
+import { collection, doc, getDoc, getDocs, query, where, setDoc, addDoc } from 'firebase/firestore';
 import { useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,38 +45,39 @@ export default function GroupDetails() {
   const fetchGroupDetails = async () => {
     try {
       // Fetch group details
-      const { data: groupData, error: groupError } = await supabase
-        .from('groups')
-        .select('*')
-        .eq('id', groupId)
-        .single();
-
-      if (groupError) throw groupError;
-      setGroup(groupData);
+      const groupDoc = await getDoc(doc(db, 'groups', groupId!));
+      if (!groupDoc.exists()) throw new Error('Group not found');
+      setGroup({ id: groupDoc.id, ...groupDoc.data() } as Group);
 
       // Fetch group members
-      const { data: membersData, error: membersError } = await supabase
-        .from('group_members')
-        .select('*')
-        .eq('group_id', groupId);
-
-      if (membersError) throw membersError;
+      const membersQuery = query(
+        collection(db, 'group_members'),
+        where('group_id', '==', groupId)
+      );
+      const membersSnapshot = await getDocs(membersQuery);
+      const membersData = membersSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as GroupMember[];
       setMembers(membersData);
 
       // Check if current user is owner
       const isOwner = membersData.some(
-        member => member.user_id === user?.id && member.role === 'owner'
+        member => member.user_id === user?.uid && member.role === 'owner'
       );
       setIsOwner(isOwner);
 
       // Fetch group preferences
-      const { data: preferencesData, error: preferencesError } = await supabase
-        .from('group_preferences')
-        .select('*')
-        .eq('group_id', groupId);
-
-      if (preferencesError) throw preferencesError;
-      setPreferences(preferencesData);
+      const prefsQuery = query(
+        collection(db, 'group_preferences'),
+        where('group_id', '==', groupId)
+      );
+      const prefsSnapshot = await getDocs(prefsQuery);
+      const prefsData = prefsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as GroupPreference[];
+      setPreferences(prefsData);
     } catch (error: any) {
       toast({
         title: "Error fetching group details",
@@ -92,20 +93,26 @@ export default function GroupDetails() {
     if (!user || !groupId) return;
 
     try {
-      const { error } = await supabase
-        .from('group_preferences')
-        .upsert(
-          {
-            group_id: groupId,
-            preference_type: type,
-            preference_value: value,
-          },
-          {
-            onConflict: 'group_id,preference_type',
-          }
-        );
-
-      if (error) throw error;
+      const prefQuery = query(
+        collection(db, 'group_preferences'),
+        where('group_id', '==', groupId),
+        where('preference_type', '==', type)
+      );
+      const prefSnapshot = await getDocs(prefQuery);
+      
+      if (prefSnapshot.empty) {
+        await addDoc(collection(db, 'group_preferences'), {
+          group_id: groupId,
+          preference_type: type,
+          preference_value: value,
+        });
+      } else {
+        await setDoc(doc(db, 'group_preferences', prefSnapshot.docs[0].id), {
+          group_id: groupId,
+          preference_type: type,
+          preference_value: value,
+        });
+      }
 
       toast({
         title: "Success",
@@ -129,26 +136,22 @@ export default function GroupDetails() {
     setAdding(true);
     try {
       // First, get the user ID from the email
-      const { data: userData, error: userError } = await supabase
-        .from('profiles')
-        .select('id')
-        .ilike('username', newMemberEmail.split('@')[0])
-        .single();
-
-      if (userError) throw new Error('User not found');
+      const usersQuery = query(
+        collection(db, 'users'),
+        where('email', '==', newMemberEmail)
+      );
+      const userSnapshot = await getDocs(usersQuery);
+      
+      if (userSnapshot.empty) throw new Error('User not found');
+      const userData = userSnapshot.docs[0];
 
       // Add the user to the group
-      const { error: memberError } = await supabase
-        .from('group_members')
-        .insert([
-          {
-            group_id: groupId,
-            user_id: userData.id,
-            role: 'member',
-          },
-        ]);
-
-      if (memberError) throw memberError;
+      await addDoc(collection(db, 'group_members'), {
+        group_id: groupId,
+        user_id: userData.id,
+        role: 'member',
+        created_at: new Date().toISOString(),
+      });
 
       toast({
         title: "Success",
