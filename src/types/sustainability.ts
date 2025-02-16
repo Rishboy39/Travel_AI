@@ -7,6 +7,7 @@ export interface UserStats {
   totalSustainableRestaurantVisits: number;
   points: number;
   createdAt: string;
+  previousScore?: number;
 }
 
 export interface Trip {

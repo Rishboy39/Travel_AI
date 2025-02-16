@@ -1,5 +1,13 @@
 import { UserStats, Trip, RestaurantVisit } from '@/types/sustainability';
 
+interface UserStatsInterface {
+  carbonFootprint: number;
+  totalFlights: number;
+  totalCarTrips: number;
+  totalBusTrips: number;
+  totalSustainableRestaurantVisits: number;
+}
+
 export function calculateSustainabilityScore(
   trips: Trip[],
   restaurantVisits: RestaurantVisit[],

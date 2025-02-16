@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { FirebaseError } from 'firebase/app';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -22,9 +23,10 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
       toast.error("Login failed", {
-        description: error.message
+        description: firebaseError.message
       });
     } finally {
       setLoading(false);

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/integrations/firebase/config';
+import { FirebaseError } from 'firebase/app';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -52,10 +53,11 @@ export default function Auth() {
         await signInWithEmailAndPassword(auth, email, password);
       }
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
       toast({
         title: "Error",
-        description: error.message,
+        description: firebaseError.message,
         variant: "destructive",
       });
     } finally {

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/integrations/firebase/config';
+import { FirebaseError } from 'firebase/app';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -39,9 +40,10 @@ export default function Register() {
       await initializeUserStats(userCredential.user.uid);
       toast.success("Account created successfully!");
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
       toast.error("Registration failed", {
-        description: error.message
+        description: firebaseError.message
       });
     } finally {
       setLoading(false);

@@ -1,8 +1,9 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { UserStatsInterface } from '@/types/sustainability';
 
 const genAI = new GoogleGenerativeAI(process.env.VITE_GEMINI_API_KEY || '');
 
-export async function analyzeSustainabilityTrends(userStats: any) {
+export async function analyzeSustainabilityTrends(userStats: UserStatsInterface) {
   const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
   const prompt = `Analyze the following user sustainability stats and provide personalized recommendations:
