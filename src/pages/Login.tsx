@@ -33,14 +33,14 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md border-green-600">
         <CardHeader>
-          <CardTitle>Welcome back</CardTitle>
+          <CardTitle className="text-green-600">Welcome back</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-green-600">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -49,10 +49,11 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
+                className="border-green-600 focus:ring-green-600 focus:border-green-600"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-green-600">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -60,13 +61,14 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
+                className="border-green-600 focus:ring-green-600 focus:border-green-600"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full bg-green-600 text-white hover:bg-green-700"
               disabled={loading}
             >
               {loading ? 'Signing in...' : 'Sign In'}
@@ -74,7 +76,7 @@ export default function Login() {
             <Button
               type="button"
               variant="link"
-              className="w-full"
+              className="w-full text-green-600 hover:text-green-700"
               onClick={() => navigate('/register')}
               disabled={loading}
             >

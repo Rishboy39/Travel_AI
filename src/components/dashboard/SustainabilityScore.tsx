@@ -87,7 +87,7 @@ export default function SustainabilityScore({ score }: Props) {
               y={center}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="text-3xl font-bold"
+              className="text-2xl font-bold"
               fill={getScoreColor(currentScore)}
             >
               {Math.round(currentScore)}%

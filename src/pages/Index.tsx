@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import { ArrowRight, Users, Globe, Calendar, Plane, Utensils, Car, Bus, LeafyGreen, BarChart } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const Index = () => {
   useEffect(() => {
@@ -42,12 +41,10 @@ const Index = () => {
           <p className="text-xl text-gray-600 mb-16 max-w-2xl mx-auto animate-fade-up">
             Track your carbon footprint, discover eco-friendly restaurants, and earn points for sustainable choices.
           </p>
-          <Link to="/register">
-            <Button size="lg" className="w-full sm:w-2/3 mx-auto group" style={{ backgroundColor: '#55883B' }} >
-              Start Your Sustainable Journey
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+          <Button size="lg" className="w-full sm:w-2/3 mx-auto group" style={{ backgroundColor: '#55883B' }}>
+            Start Your Sustainable Journey
+            <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
         </div>
       </section>
 
@@ -170,12 +167,10 @@ const Index = () => {
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
               Start earning rewards for your eco-friendly choices today.
             </p>
-            <Link to="/register">
-                <Button size="lg" className="w-full sm:w-2/3 mx-auto group" style={{ backgroundColor: '#55883B' }}>
-                  Get Started Now
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-            </Link>
+            <Button size="lg" className="w-full sm:w-2/3 mx-auto group" style={{ backgroundColor: '#55883B' }}>
+              Get Started Now
+              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
         </div>
       </section>

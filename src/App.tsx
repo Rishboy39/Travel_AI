@@ -10,6 +10,7 @@ import Dashboard from '@/pages/Dashboard';
 import NotFound from '@/pages/NotFound';
 import Profile from '@/pages/Profile';
 import About from '@/pages/About';
+import Rewards from '@/pages/Rewards';
 import './App.css';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
               <Profile />
             </ProtectedRoute>
           } />
+          <Route path="/rewards" element={<Rewards />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />

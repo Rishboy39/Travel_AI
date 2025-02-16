@@ -248,7 +248,7 @@ export default function TravelStats({ userId, stats, onScoreUpdate }: Props) {
                     type="button"
                     variant={selectedMode === mode ? 'default' : 'outline'}
                     onClick={() => handleModeSelect(mode as TransportMode)}
-                    className="capitalize"
+                    className={`border-green-600 text-green-600 ${selectedMode === mode ? 'bg-green-600 text-white' : 'hover:bg-green-600 hover:text-white'}`}
                   >
                     {mode}
                   </Button>
@@ -269,7 +269,7 @@ export default function TravelStats({ userId, stats, onScoreUpdate }: Props) {
               )}
 
               <div className="space-y-2">
-                <Label>Distance (km)</Label>
+                <Label>Distance (mi)</Label>
                 <Input
                   type="number"
                   min="0.1"
@@ -281,7 +281,9 @@ export default function TravelStats({ userId, stats, onScoreUpdate }: Props) {
                 />
               </div>
 
-              <Button type="submit">Record Trip</Button>
+              <Button type="submit" className="border border-green-600 bg-green-600 text-white hover:bg-green-600">
+                Record Trip
+              </Button>
             </form>
           </TabsContent>
 

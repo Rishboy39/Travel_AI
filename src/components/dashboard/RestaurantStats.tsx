@@ -99,7 +99,7 @@ export default function RestaurantStats({ userId, stats }: Props) {
             </select>
           </div>
 
-          <Button onClick={handleVisitRecord} disabled={!selectedRestaurant}>
+          <Button onClick={handleVisitRecord} disabled={!selectedRestaurant} className="border border-green-600 bg-green-600 text-white hover:bg-green-600">
             Record Visit
           </Button>
 

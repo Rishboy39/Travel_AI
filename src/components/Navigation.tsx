@@ -41,7 +41,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-background border-b">
+    <nav className="fixed top-0 left-0 right-0 bg-white border-b shadow-sm">
       <div className="max-w-screen-2xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -58,6 +58,9 @@ const Navigation = () => {
               <>
                 <Link to="/dashboard" className="hover:text-green-600">
                   Dashboard
+                </Link>
+                <Link to="/rewards" className="hover:text-green-600">
+                  Rewards
                 </Link>
                 <Button 
                   onClick={handleSignOut}
@@ -102,6 +105,9 @@ const Navigation = () => {
               <>
                 <Link to="/dashboard" className="block hover:text-green-600">
                   Dashboard
+                </Link>
+                <Link to="/rewards" className="hover:text-green-600">
+                  Rewards
                 </Link>
                 <Button 
                   onClick={handleSignOut}
