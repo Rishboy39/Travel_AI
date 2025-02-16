@@ -11,6 +11,7 @@ import NotFound from '@/pages/NotFound';
 import Profile from '@/pages/Profile';
 import About from '@/pages/About';
 import './App.css';
+import SpeedTrackerPage from '@/pages/SpeedTrackerPage';
 
 function App() {
   return (
@@ -22,7 +23,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/about" element={<About />} />
+          <Route path="/" element={<div>Home Page</div>} />
+          <Route path="/SpeedTrackerPage" element={<SpeedTrackerPage />} />
+          <Route path="*" element={<NotFound />} />
           <Route path="/dashboard" element={
+            
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>

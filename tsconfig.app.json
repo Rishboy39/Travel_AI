@@ -1,30 +1,57 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES2020",
+//     "useDefineForClassFields": true,
+//     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+//     "module": "ESNext",
+//     "skipLibCheck": true,
+
+//     /* Bundler mode */
+//     "moduleResolution": "bundler",
+//     "allowImportingTsExtensions": true,
+//     "isolatedModules": true,
+//     "moduleDetection": "force",
+//     "noEmit": true,
+//     "jsx": "react-jsx",
+
+//     /* Linting */
+//     "strict": false,
+//     "noUnusedLocals": false,
+//     "noUnusedParameters": false,
+//     "noImplicitAny": false,
+//     "noFallthroughCasesInSwitch": false,
+
+//     "baseUrl": ".",
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     }
+//   },
+//   "include": ["src"]
+
+//   "compilerOptions": {
+//     "allowSyntheticDefaultImports": true,
+//     "esModuleInterop": true,
+//     "jsx": "react-jsx",
+//     "target": "esnext",
+//     "module": "esnext",
+//     "moduleResolution": "node"
+//   }
+// }
+
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": false,
-
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "target": "esnext",                    // Modern JavaScript features
+    "module": "esnext",                    // For React apps
+    "lib": ["dom", "dom.iterable", "esnext"], // Browser + latest JS support
+    "allowSyntheticDefaultImports": true,  // Allow default imports
+    "esModuleInterop": true,               // CommonJS compatibility
+    "jsx": "react-jsx",                    // Enables React's JSX transform
+    "moduleResolution": "node",            // Node-style imports
+    "resolveJsonModule": true,             // Import JSON files if needed
+    "skipLibCheck": true,                  // Ignore library type checks
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing
+    "strict": true                         // Enable strict type checking
   },
-  "include": ["src"]
+  "include": ["src"],                      // Include only the src folder
+  "exclude": ["node_modules", "dist"]      // Exclude unnecessary folders
 }
