@@ -922,7 +922,7 @@ const SpeedTrackerPage: React.FC = () => {
             const mapElement = document.getElementById("map");
             if (mapElement && window.google && window.google.maps) {
                 new window.google.maps.Map(mapElement as HTMLElement, {
-                    center: { lat: -34.397, lng: 150.644 },
+                    center: { lat: 47.6740, lng: -122.1215 },
                     zoom: 8,
                 });
             } else {
