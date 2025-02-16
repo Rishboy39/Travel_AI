@@ -1,37 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '@/integrations/firebase/config';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/components/ui/use-toast';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '@/integrations/firebase/config';
+import { toast } from 'sonner';
 
-export default function Auth() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const initializeUserStats = async (userId: string) => {
-    await setDoc(doc(db, 'user_stats', userId), {
-      userId,
-      sustainabilityScore: 50,
-      previousScore: 50,
-      totalFlights: 0,
-      totalCarTrips: 0,
-      totalBusTrips: 0,
-      totalSustainableRestaurantVisits: 0,
-      carbonFootprint: 0,
-      points: 0,
-      createdAt: new Date().toISOString()
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,24 +20,11 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await initializeUserStats(userCredential.user.uid);
-        toast({
-          title: "Success!",
-          description: "Account created successfully.",
-        });
-        setEmail('');
-        setPassword('');
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/dashboard');
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
+      toast.error("Login failed", {
+        description: error.message
       });
     } finally {
       setLoading(false);
@@ -67,12 +35,7 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>{isSignUp ? 'Create an account' : 'Welcome back'}</CardTitle>
-          <CardDescription>
-            {isSignUp 
-              ? 'Enter your email and password to create an account' 
-              : 'Enter your email and password to log in'}
-          </CardDescription>
+          <CardTitle>Welcome back</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -106,26 +69,20 @@ export default function Auth() {
               className="w-full"
               disabled={loading}
             >
-              {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+              {loading ? 'Signing in...' : 'Sign In'}
             </Button>
             <Button
               type="button"
               variant="link"
               className="w-full"
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setEmail('');
-                setPassword('');
-              }}
+              onClick={() => navigate('/register')}
               disabled={loading}
             >
-              {isSignUp 
-                ? 'Already have an account? Sign In' 
-                : "Don't have an account? Sign Up"}
+              Don't have an account? Sign Up
             </Button>
           </CardFooter>
         </form>
       </Card>
     </div>
   );
-}
+} 

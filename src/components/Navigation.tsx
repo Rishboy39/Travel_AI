@@ -2,37 +2,34 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/hooks/useAuth";
 import { auth } from "@/integrations/firebase/config";
 import { signOut } from "firebase/auth";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
-const Navigation = () => {
+export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      navigate('/auth');
+      navigate('/login');
     } catch (error: any) {
-      toast({
-        title: "Error signing out",
-        description: error.message,
-        variant: "destructive",
+      toast.error("Error signing out", {
+        description: error.message
       });
     }
   };
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b">
+    <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-semibold text-gray-900">
-              WanderGroup
+            <Link to="/" className="text-xl font-bold text-gray-900">
+              EcoTravel
             </Link>
           </div>
 
@@ -40,11 +37,8 @@ const Navigation = () => {
           <div className="hidden md:flex md:items-center md:space-x-4">
             {user ? (
               <>
-                <Link to="/groups" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
-                  Groups
-                </Link>
-                <Link to="/preferences" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
-                  Preferences
+                <Link to="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
+                  Dashboard
                 </Link>
                 <Button variant="outline" onClick={handleSignOut}>
                   Sign Out
@@ -52,14 +46,11 @@ const Navigation = () => {
               </>
             ) : (
               <>
-                <Link to="/features" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
-                  Features
-                </Link>
-                <Link to="/about" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
-                  About
-                </Link>
-                <Link to="/auth">
+                <Link to="/login">
                   <Button variant="outline">Sign In</Button>
+                </Link>
+                <Link to="/register">
+                  <Button>Sign Up</Button>
                 </Link>
               </>
             )}
@@ -69,12 +60,12 @@ const Navigation = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             >
               {isOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
+                <X className="block h-6 w-6" />
               ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
+                <Menu className="block h-6 w-6" />
               )}
             </button>
           </div>
@@ -88,39 +79,30 @@ const Navigation = () => {
             {user ? (
               <>
                 <Link
-                  to="/groups"
+                  to="/dashboard"
                   className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
+                  onClick={() => setIsOpen(false)}
                 >
-                  Groups
+                  Dashboard
                 </Link>
-                <Link
-                  to="/preferences"
-                  className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    handleSignOut();
+                    setIsOpen(false);
+                  }}
+                  className="w-full justify-start"
                 >
-                  Preferences
-                </Link>
-                <Button variant="outline" onClick={handleSignOut} className="w-full mt-2">
                   Sign Out
                 </Button>
               </>
             ) : (
               <>
-                <Link
-                  to="/features"
-                  className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
-                >
-                  Features
+                <Link to="/login" className="block w-full" onClick={() => setIsOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start">Sign In</Button>
                 </Link>
-                <Link
-                  to="/about"
-                  className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
-                >
-                  About
-                </Link>
-                <Link to="/auth" className="block mt-2">
-                  <Button variant="outline" className="w-full">
-                    Sign In
-                  </Button>
+                <Link to="/register" className="block w-full" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full justify-start">Sign Up</Button>
                 </Link>
               </>
             )}
@@ -129,6 +111,4 @@ const Navigation = () => {
       )}
     </nav>
   );
-};
-
-export default Navigation;
+}
