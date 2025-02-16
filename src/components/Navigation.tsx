@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import { auth } from "@/integrations/firebase/config";
 import { signOut } from "firebase/auth";
@@ -16,7 +16,11 @@ const Navigation = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      navigate('/auth');
+      navigate('/login');
+      toast({
+        title: "Signed out successfully",
+        description: "You have been logged out of your account.",
+      });
     } catch (error: any) {
       toast({
         title: "Error signing out",
@@ -27,7 +31,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b left-0">
+    <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center">
@@ -40,11 +44,11 @@ const Navigation = () => {
           <div className="hidden md:flex md:items-center md:space-x-4">
             {user ? (
               <>
-                <Link to="/groups" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
-                  Groups
+                <Link to="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
+                  Dashboard
                 </Link>
-                <Link to="/preferences" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
-                  Preferences
+                <Link to="/profile" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
+                  <User className="h-5 w-5" />
                 </Link>
                 <Button variant="outline" onClick={handleSignOut}>
                   Sign Out
@@ -52,17 +56,16 @@ const Navigation = () => {
               </>
             ) : (
               <>
-                <Link to="/features" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
-                  Features
-                </Link>
                 <Link to="/about" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">
                   About
                 </Link>
-                <Link to="/auth">
+                <Link to="/register">
+                  <Button variant="outline">Register</Button>
+                </Link>
+                <Link to="/login">
                   <Button variant="outline">Sign In</Button>
                 </Link>
               </>
-              
             )}
           </div>
 
@@ -89,16 +92,16 @@ const Navigation = () => {
             {user ? (
               <>
                 <Link
-                  to="/groups"
+                  to="/dashboard"
                   className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
                 >
-                  Groups
+                  Dashboard
                 </Link>
                 <Link
-                  to="/preferences"
+                  to="/profile"
                   className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
                 >
-                  Preferences
+                  Profile
                 </Link>
                 <Button variant="outline" onClick={handleSignOut} className="w-full mt-2">
                   Sign Out
@@ -107,18 +110,17 @@ const Navigation = () => {
             ) : (
               <>
                 <Link
-                  to="/features"
-                  className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
-                >
-                  Features
-                </Link>
-                <Link
                   to="/about"
                   className="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md"
                 >
                   About
                 </Link>
-                <Link to="/auth" className="block mt-2">
+                <Link to="/register" className="block mt-2">
+                  <Button variant="outline" className="w-full">
+                    Register
+                  </Button>
+                </Link>
+                <Link to="/login" className="block mt-2">
                   <Button variant="outline" className="w-full">
                     Sign In
                   </Button>
