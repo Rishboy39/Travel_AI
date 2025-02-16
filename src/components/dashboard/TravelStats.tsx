@@ -276,7 +276,7 @@ export default function TravelStats({ userId, stats, onScoreUpdate }: Props) {
                   step="0.1"
                   value={distance}
                   onChange={(e) => setDistance(e.target.value)}
-                  placeholder="Enter distance in kilometers"
+                  placeholder="Enter distance in miles"
                   required
                 />
               </div>

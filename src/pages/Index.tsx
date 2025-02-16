@@ -41,7 +41,12 @@ const Index = () => {
           <p className="text-xl text-gray-600 mb-16 max-w-2xl mx-auto animate-fade-up">
             Track your carbon footprint, discover eco-friendly restaurants, and earn points for sustainable choices.
           </p>
-          <Button size="lg" className="w-full sm:w-2/3 mx-auto group" style={{ backgroundColor: '#55883B' }}>
+          <Button 
+            size="lg" 
+            className="w-full sm:w-2/3 mx-auto group" 
+            style={{ backgroundColor: '#55883B' }}
+            onClick={() => window.location.href = '/dashboard'}
+          >
             Start Your Sustainable Journey
             <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
@@ -167,7 +172,7 @@ const Index = () => {
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
               Start earning rewards for your eco-friendly choices today.
             </p>
-            <Button size="lg" className="w-full sm:w-2/3 mx-auto group" style={{ backgroundColor: '#55883B' }}>
+            <Button size="lg" className="w-full sm:w-2/3 mx-auto group" style={{ backgroundColor: '#55883B' }} onClick={() => window.location.href = '/dashboard'}>
               Get Started Now
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
