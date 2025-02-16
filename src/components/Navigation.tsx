@@ -59,6 +59,9 @@ const Navigation = () => {
                 <Link to="/dashboard" className="hover:text-green-600">
                   Dashboard
                 </Link>
+                <Link to="/rewards" className="hover:text-green-600">
+                  Rewards
+                </Link>
                 <Button 
                   onClick={handleSignOut}
                   variant="outline"
@@ -102,6 +105,9 @@ const Navigation = () => {
               <>
                 <Link to="/dashboard" className="block hover:text-green-600">
                   Dashboard
+                </Link>
+                <Link to="/rewards" className="hover:text-green-600">
+                  Rewards
                 </Link>
                 <Button 
                   onClick={handleSignOut}

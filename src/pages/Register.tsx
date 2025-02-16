@@ -54,12 +54,12 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Create an account</CardTitle>
+          <CardTitle className="text-green-600">Create an account</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-green-600">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -68,10 +68,11 @@ export default function Register() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
+                className="border border-green-600"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-green-600">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -79,13 +80,14 @@ export default function Register() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
+                className="border border-green-600"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full bg-green-600 text-white hover:bg-green-700"
               disabled={loading}
             >
               {loading ? 'Creating account...' : 'Create Account'}
@@ -93,7 +95,7 @@ export default function Register() {
             <Button
               type="button"
               variant="link"
-              className="w-full"
+              className="w-full text-green-600 hover:underline"
               onClick={() => navigate('/login')}
               disabled={loading}
             >
