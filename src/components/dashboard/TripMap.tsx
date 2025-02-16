@@ -47,7 +47,7 @@ export default function TripMap({ userId }: Props) {
         ]
       });
 
-      // Add dummy markers
+      // Add markers
       const markers = [
         { position: { lat: -34.397, lng: 150.644 }, type: 'car' },
         { position: { lat: -34.397, lng: 150.744 }, type: 'bus' },
@@ -72,17 +72,19 @@ export default function TripMap({ userId }: Props) {
   }, []);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Travel Map</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div 
-          ref={mapRef} 
-          className="w-full h-[400px] rounded-lg"
-          style={{ background: '#242f3e' }}
-        />
-      </CardContent>
-    </Card>
+    <div className="relative h-[400px] rounded-lg overflow-hidden z-0">
+      <Card className="absolute inset-0">
+        <CardHeader>
+          <CardTitle>Travel Map</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div 
+            ref={mapRef} 
+            className="w-full h-[300px] rounded-lg"
+            style={{ background: '#242f3e' }}
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 } 

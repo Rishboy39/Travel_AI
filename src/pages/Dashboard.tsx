@@ -22,6 +22,7 @@ const DUMMY_STATS: UserStats = {
 export default function Dashboard() {
   const { user } = useAuth();
   const [stats, setStats] = useState<UserStats>(DUMMY_STATS);
+  const [sustainabilityScore, setSustainabilityScore] = useState<number>(DUMMY_STATS.sustainabilityScore);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -32,13 +33,16 @@ export default function Dashboard() {
         (doc) => {
           if (doc.exists()) {
             setStats(doc.data() as UserStats);
+            setSustainabilityScore(doc.data()?.sustainabilityScore || 0);
           } else {
             setStats(DUMMY_STATS);
+            setSustainabilityScore(DUMMY_STATS.sustainabilityScore);
           }
         },
         (error) => {
           console.error('Error fetching stats:', error);
           setStats(DUMMY_STATS);
+          setSustainabilityScore(DUMMY_STATS.sustainabilityScore);
         }
       );
 
@@ -46,17 +50,32 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error setting up listener:', error);
       setStats(DUMMY_STATS);
+      setSustainabilityScore(DUMMY_STATS.sustainabilityScore);
     }
   }, [user?.uid]);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Your Sustainability Dashboard</h1>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">Your Sustainability Dashboard</h1>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <SustainabilityScore score={stats.sustainabilityScore} />
-        <TripMap userId={user?.uid || '123'} />
-        <TravelStats userId={user?.uid || '123'} stats={stats} />
-        <RestaurantStats userId={user?.uid || '123'} stats={stats} />
+        <div className="space-y-6">
+          <SustainabilityScore score={sustainabilityScore} />
+          <TravelStats 
+            userId={user?.uid || ''} 
+            stats={stats} 
+            onScoreUpdate={setSustainabilityScore} 
+          />
+        </div>
+        
+        <div className="space-y-6">
+          <div className="relative z-0">
+            <TripMap userId={user?.uid || ''} />
+          </div>
+          <RestaurantStats userId={user?.uid || ''} stats={stats} />
+        </div>
       </div>
     </div>
   );

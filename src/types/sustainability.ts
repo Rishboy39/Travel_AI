@@ -1,11 +1,15 @@
 export interface UserStats {
   userId: string;
-  sustainabilityScore: number;
-  totalFlights: number;
-  totalCarTrips: number;
+  totalWalks: number;
+  totalBicycleRides: number;
+  totalScooterRides: number;
+  totalCarpools: number;
+  totalTrainRides: number;
+  totalSubwayRides: number;
   totalBusTrips: number;
-  totalSustainableRestaurantVisits: number;
-  points: number;
+  totalCarTrips: number;
+  totalFlights: number;
+  sustainabilityScore: number;
   createdAt: string;
 }
 
